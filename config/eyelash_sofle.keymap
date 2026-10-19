@@ -83,24 +83,30 @@
 
 / {
     behaviors {
+        // Dial bindings use the seller's runtime sensor-rotate behavior,
+        // which is what this firmware's encoder handling expects.
         scroll_encoder: scroll_encoder {
-            compatible = "zmk,behavior-sensor-rotate";
+            compatible = "zmk,behavior-runtime-sensor-rotate";
             #sensor-binding-cells = <0>;
-            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
-
             tap-ms = <30>;
+            cw-binding = <&msc SCRL_UP>;
+            ccw-binding = <&msc SCRL_DOWN>;
         };
 
         vol_encoder: vol_encoder {
-            compatible = "zmk,behavior-sensor-rotate";
+            compatible = "zmk,behavior-runtime-sensor-rotate";
             #sensor-binding-cells = <0>;
-            bindings = <&kp C_VOL_UP>, <&kp C_VOL_DN>;
+            tap-ms = <5>;
+            cw-binding = <&kp C_VOL_UP>;
+            ccw-binding = <&kp C_VOL_DN>;
         };
 
         rgb_encoder: rgb_encoder {
-            compatible = "zmk,behavior-sensor-rotate";
+            compatible = "zmk,behavior-runtime-sensor-rotate";
             #sensor-binding-cells = <0>;
-            bindings = <&rgb_ug RGB_BRI>, <&rgb_ug RGB_BRD>;
+            tap-ms = <5>;
+            cw-binding = <&rgb_ug RGB_BRI>;
+            ccw-binding = <&rgb_ug RGB_BRD>;
         };
 
         MAC_ACCENT(mac_a, LA(E), A)
