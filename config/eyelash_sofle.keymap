@@ -1,7 +1,7 @@
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 1200  // 600
 // Scroll speed. The scroll behavior moves every 16 ms and drops fractions, so
-// 70/s gives one notch per dial click (see tap-ms on scroll_encoder).
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 70    // 10
+// 140/s gives two notches per dial click (see tap-ms on scroll_encoder).
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 140   // 10
 
 #include <input/processors.dtsi>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
