@@ -1,5 +1,7 @@
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 1200  // 600
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 35    // 10
+// Scroll speed. The scroll behavior moves every 16 ms and drops fractions, so
+// 70/s gives one notch per dial click (see tap-ms on scroll_encoder).
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 70    // 10
 
 #include <input/processors.dtsi>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
@@ -25,19 +27,7 @@
 #define CTRL_HELD (MOD_LGUI)
 #define ALT_HELD  (MOD_RGUI)
 
-/ {
-    zip_scroll_scaler: zip_scroll_scaler {
-        compatible = "zmk,input-processor-scaler";
-        #input-processor-cells = <2>;
-        type = <INPUT_EV_REL>;
-        codes = <INPUT_REL_WHEEL INPUT_REL_HWHEEL>;
-        track-remainders;
-    };
-};
-
 &mmv_input_listener { input-processors = <&zip_xy_scaler 2 1>; };
-
-&msc_input_listener { input-processors = <&zip_scroll_scaler 2 1>; };
 
 &msc {
     acceleration-exponent = <0>;      // 0
@@ -88,7 +78,7 @@
             #sensor-binding-cells = <0>;
             bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
 
-            tap-ms = <30>;
+            tap-ms = <20>;
         };
 
         vol_encoder: vol_encoder {
