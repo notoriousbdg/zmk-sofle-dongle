@@ -13,13 +13,11 @@
 
 // Layers. Order matters: a higher number wins when several are active.
 #define BASE    0
-#define FN_L    1   // left Fn thumb
-#define FN_R    2   // right Fn thumb (same keys as FN_L)
-#define ACCENT  3   // Accent thumb, PC mode: sends AltGr+letter
-#define MAC     4   // empty; toggled on System+M to switch accents to Mac mode
-#define ACC_MAC 5   // Accent thumb while MAC is on
-#define SYSTEM  6   // both Fn thumbs held
-#define MOUSE   7   // joystick click toggles
+#define MAC     1   // Mac mode (Fn+Space+M): swaps Ctrl/Cmd, right Alt becomes Accent
+#define FN      2   // left Fn thumb
+#define ACC_MAC 3   // right Alt in Mac mode
+#define SYSTEM  4   // hold Fn, then hold Space
+#define MOUSE   5   // joystick click toggles
 
 / {
     zip_scroll_scaler: zip_scroll_scaler {
@@ -108,63 +106,47 @@
         };
     };
 
-// Shared by both Fn layers.
-#define FN_BINDINGS \
-&kp F1     &kp F2  &kp F3          &kp F4          &kp F5      &kp F6    &trans  &kp F7     &kp F8    &kp F9    &kp F10    &kp F11   &kp F12 \
-&trans     &trans  &kp C_PREV      &kp C_PP        &kp C_NEXT  &trans    &trans  &kp PG_UP  &kp HOME  &kp UP    &kp END    &kp LBKT  &kp RBKT \
-&kp CAPS   &trans  &kp C_BRI_DN    &kp C_BRI_UP    &trans      &trans    &trans  &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &trans    &kp GRAVE \
-&trans     &trans  &trans          &trans          &trans      &trans    &trans  &trans     &trans    &trans    &trans     &trans    &trans \
-&trans     &trans  &trans          &trans          &trans      &kp DEL   &trans  &trans     &trans    &trans    &trans     &trans
-
     keymap {
         compatible = "zmk,keymap";
 
+        // Right Alt is AltGr: with Windows "United States-International" or
+        // Linux "English (US, intl., with AltGr dead keys)" it types
+        // á é í ó ú ñ ü ¡ ¿ (RAlt + a e i o u n y 1 /).
         base {
             display-name = "Base";
             bindings = <
-&kp EQUAL   &kp N1     &kp N2    &kp N3    &kp N4     &kp N5     &kp UP          &kp N6     &kp N7     &kp N8      &kp N9        &kp N0     &kp MINUS
-&kp TAB     &kp Q      &kp W     &kp E     &kp R      &kp T      &kp DOWN        &kp Y      &kp U      &kp I       &kp O         &kp P      &kp BSLH
-&kp ESC     &kp A      &kp S     &kp D     &kp F      &kp G      &kp LEFT        &kp H      &kp J      &kp K       &kp L         &kp SEMI   &kp SQT
-&kp LSHFT   &kp Z      &kp X     &kp C     &kp V      &kp B      &kp RIGHT       &kp N      &kp M      &kp COMMA   &kp DOT       &kp FSLH   &kp RSHFT
-&kp C_MUTE  &kp LCTRL  &kp LALT  &kp LGUI  &mo FN_L   &kp BSPC   &tog MOUSE      &kp SPACE  &kp ENTER  &mo FN_R    &mo ACCENT    &kp RCTRL
+&kp EQUAL   &kp N1    &kp N2    &kp N3     &kp N4     &kp N5     &kp UP          &kp N6     &kp N7     &kp N8      &kp N9     &kp N0     &kp MINUS
+&kp TAB     &kp Q     &kp W     &kp E      &kp R      &kp T      &kp DOWN        &kp Y      &kp U      &kp I       &kp O      &kp P      &kp BSLH
+&kp ESC     &kp A     &kp S     &kp D      &kp F      &kp G      &kp LEFT        &kp H      &kp J      &kp K       &kp L      &kp SEMI   &kp SQT
+&kp LSHFT   &kp Z     &kp X     &kp C      &kp V      &kp B      &kp RIGHT       &kp N      &kp M      &kp COMMA   &kp DOT    &kp FSLH   &kp RSHFT
+&kp C_MUTE  &kp LGUI  &kp LALT  &kp LCTRL  &mo FN     &kp BSPC   &tog MOUSE      &kp SPACE  &kp ENTER  &kp RCTRL   &kp RALT   &kp RGUI
             >;
             sensor-bindings = <&scroll_encoder>;
         };
 
-        fn_left {
-            display-name = "Fn";
-            bindings = <FN_BINDINGS>;
-            sensor-bindings = <&vol_encoder>;
-        };
-
-        fn_right {
-            display-name = "Fn";
-            bindings = <FN_BINDINGS>;
-            sensor-bindings = <&vol_encoder>;
-        };
-
-        // PC mode. Needs Windows "United States-International" or
-        // Linux "English (US, intl., with AltGr dead keys)".
-        accent {
-            display-name = "Accent";
-            bindings = <
-&trans  &kp RA(N1)  &trans  &trans      &trans  &trans  &trans  &trans      &trans      &trans      &trans      &trans        &trans
-&trans  &trans      &trans  &kp RA(E)   &trans  &trans  &trans  &kp RA(Y)   &kp RA(U)   &kp RA(I)   &kp RA(O)   &trans        &trans
-&trans  &kp RA(A)   &trans  &trans      &trans  &trans  &trans  &trans      &trans      &trans      &trans      &trans        &trans
-&trans  &trans      &trans  &trans      &trans  &trans  &trans  &kp RA(N)   &trans      &trans      &trans      &kp RA(FSLH)  &trans
-&trans  &trans      &trans  &trans      &trans  &trans  &trans  &trans      &trans      &trans      &trans      &trans
-            >;
-        };
-
+        // Ctrl keys send Cmd and Win keys send Ctrl, so Ctrl+C/V/Z work as on
+        // Windows. Right Alt becomes the Accent key.
         mac {
             display-name = "Mac";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans     &trans  &trans     &trans  &trans  &trans  &trans  &trans  &trans     &trans       &trans     &trans
+&trans  &trans     &trans  &trans     &trans  &trans  &trans  &trans  &trans  &trans     &trans       &trans     &trans
+&trans  &trans     &trans  &trans     &trans  &trans  &trans  &trans  &trans  &trans     &trans       &trans     &trans
+&trans  &trans     &trans  &trans     &trans  &trans  &trans  &trans  &trans  &trans     &trans       &trans     &trans
+&trans  &kp LCTRL  &trans  &kp LGUI   &trans  &trans  &trans  &trans  &trans  &kp RGUI   &mo ACC_MAC  &kp RCTRL
             >;
+        };
+
+        fn {
+            display-name = "Fn";
+            bindings = <
+&kp F1     &kp F2  &kp F3          &kp F4          &kp F5      &kp F6    &trans  &kp F7      &kp F8    &kp F9    &kp F10    &kp F11   &kp F12
+&trans     &trans  &kp C_PREV      &kp C_PP        &kp C_NEXT  &trans    &trans  &kp PG_UP   &kp HOME  &kp UP    &kp END    &kp LBKT  &kp RBKT
+&kp CAPS   &trans  &kp C_BRI_DN    &kp C_BRI_UP    &trans      &trans    &trans  &kp PG_DN   &kp LEFT  &kp DOWN  &kp RIGHT  &trans    &kp GRAVE
+&trans     &trans  &trans          &trans          &trans      &trans    &trans  &trans      &trans    &trans    &trans     &trans    &trans
+&trans     &trans  &trans          &trans          &trans      &kp DEL   &trans  &mo SYSTEM  &trans    &trans    &trans     &trans
+            >;
+            sensor-bindings = <&vol_encoder>;
         };
 
         accent_mac {
@@ -200,20 +182,6 @@
 &trans  &trans  &trans  &trans  &mkp RCLK  &mkp LCLK  &tog MOUSE       &mkp LCLK  &mkp RCLK  &trans  &trans  &trans
             >;
             sensor-bindings = <&scroll_encoder>;
-        };
-    };
-
-    conditional_layers {
-        compatible = "zmk,conditional-layers";
-
-        system {
-            if-layers = <FN_L FN_R>;
-            then-layer = <SYSTEM>;
-        };
-
-        accent_mac {
-            if-layers = <ACCENT MAC>;
-            then-layer = <ACC_MAC>;
         };
     };
 };
