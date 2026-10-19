@@ -393,3 +393,27 @@ layers:
 combos:
 - p: [14, 28, 40]
   k: '&soft_off'
+- p: [16, 17]
+  k: {t: '[', s: '{'}
+  l: [Base, Mac]
+- p: [21, 22]
+  k: {t: ']', s: '}'}
+  l: [Base, Mac]
+- p: [29, 30]
+  k: (
+  l: [Base, Mac]
+- p: [34, 35]
+  k: )
+  l: [Base, Mac]
+- p: [42, 43]
+  k: '{'
+  l: [Base, Mac]
+- p: [47, 48]
+  k: '}'
+  l: [Base, Mac]
+- p: [18, 20]
+  k: {t: \, s: '|'}
+  l: [Base, Mac]
+- p: [31, 33]
+  k: '|'
+  l: [Base, Mac]
